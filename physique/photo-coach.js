@@ -68,6 +68,7 @@ $('pc-photos').innerHTML=`
   <div class="section-title"><h2>Your comparison</h2><span class="tiny muted">FIRST ↔ LATEST FRONT PHOTO</span></div>
   <div class="pc-compare">${photoCard(first,'Baseline')}${first?.id===p?.id?'<div class="pc-photo-empty">Latest check-in<br><span>Upload a later photo to compare</span></div>':photoCard(p,'Latest')}</div>
   ${all.length?`<details class="pc-history"><summary>Photo history (${all.length})</summary><div class="pc-history-grid">${all.map(p=>photoCard(p,`${p.view.toUpperCase()} · ${displayDate(p.date)}`)).join('')}</div></details>`:'<p class="small muted">Upload your first picture to begin tracking.</p>'}
+  <div id="pc-free-ai" class="card pad"></div>
   <div class="section-title"><h2>On-device photo scan</h2><span class="pill">OPTIONAL</span></div>
   <div class="card pad"><p class="small muted" style="margin-top:0">Checks whether a front-facing pose is detected and, when possible, compares approximate shoulder-to-hip landmark spacing between your progress photo and the goal image. This is <strong>not</strong> a body-fat, muscle-size or health measurement. Camera angle, pose and genetics affect it.</p>
   <button type="button" class="save" id="pc-scan" ${p?'':'disabled'}>${busy?'Scanning…':'Scan latest photo privately'}</button><p class="pc-disclaimer">First scan downloads Google's MediaPipe model to your browser; the photo itself is processed locally, not uploaded.</p><div id="pc-scan-output" aria-live="polite">${esc(lastAnalysisMessage||(meta.pose&&p&&meta.pose.id===p.id?'Previous scan: shoulder-to-hip landmark spacing '+Number(meta.pose.ratio).toFixed(2)+(meta.pose.targetRatio?' · goal photo '+Number(meta.pose.targetRatio).toFixed(2):'')+'. This is not a muscle or body-fat measurement.':'No scan yet. Upload a front photo to begin.'))}</div></div>
@@ -85,6 +86,7 @@ $('pc-photos').innerHTML=`
   <div class="section-title"><h2>Private photo backups</h2></div>
   <div class="card pad"><p class="small muted" style="margin-top:0">Photos are stored in this browser's private IndexedDB, not in the public GitHub repository or in your original FORGE JSON backup. Clearing browser storage or changing iPhones can erase them.</p><div class="pc-actions"><button type="button" class="secondary-button" id="pc-export">Export photos + review</button><label class="secondary-button pc-import">Import photo backup<input type="file" id="pc-import-file" accept=".json,application/json"></label><button type="button" class="textbtn" id="pc-delete-all">Delete all photos</button></div></div>
   <div class="safety pc-safety"><strong>Back-first rule:</strong> A physique photo is not permission to train through sciatica. New or worsening weakness needs prompt medical assessment. New bowel/bladder symptoms or saddle numbness need emergency assessment.</div>`;
+document.dispatchEvent(new Event('forge:photos-rendered'));
 }
 function coachLink(){const q=`Please review my progress photos against my goal of a muscular, defined physique. I am 29 with intermittent gym consistency and an L5/S1 disc surgery history. I still get leg pain/tingling/sciatica. I will ATTACH my current front/side photos and my physique inspiration photo. Please discuss visible, uncertain upper-body development, shape and realistic training priorities without diagnosing body fat % from photos. Do not suggest lifting through nerve symptoms. Then output a single JSON block (no extra fields) for my FORGE tracker: {"focus":["shoulders","chest"],"definition":"maintain","notes":"brief practical advice"}. The focus values must be from shoulders,chest,back,arms,definition,legs; definition one of unsure,leaner,bigger,maintain. Base recommendations only on what is actually visible.`;return 'https://chatgpt.com/?q='+encodeURIComponent(q)}
 async function upload(file,view){if(!file)return;if(!file.type.startsWith('image/'))return app.toast('Choose a photo');if(file.size>20*1024*1024)return app.toast('Please choose an image under 20 MB');if(!db)return app.toast('Browser photo storage unavailable');
@@ -144,5 +146,9 @@ adapt();app.renderToday();app.renderPlan();render();
 $('pc-photos').addEventListener('click',handleClick);$('pc-photos').addEventListener('change',handleFile);
 document.addEventListener('click',e=>{if(e.target.closest('[data-tab="photos"]'))setTimeout(render,0)});
 }
+window.ForgePhotoCoach={getPhoto:currentPhoto, applyFocus(values){
+ const focus=[...new Set(values)].filter(x=>FOCUS[x]).slice(0,2);if(!focus.length)return false;
+ meta.focus=focus;meta.coachNotes='Selected from optional local AI observations; review against real training progress.';meta.reviewedAt=dateLocal();save();adapt();app.renderToday();app.renderPlan();render();return true;
+}};
 init();
 })();
