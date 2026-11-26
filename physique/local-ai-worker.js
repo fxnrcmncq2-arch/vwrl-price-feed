@@ -40,12 +40,14 @@ self.onmessage=async event=>{
       const messages=[{role:'user',content:[{type:'image'}, {type:'text',text:prompt}]}];
       const chat=processor.apply_chat_template(messages,{add_generation_prompt:true});
       const inputs=await processor(chat,[img],{do_image_splitting:false});
-      const output=await model.generate({...inputs,max_new_tokens:110,do_sample:false,repetition_penalty:1.1});
-      let decoded=processor.batch_decode(output,{skip_prompt:true,skip_special_tokens:true});
-      let text=String(decoded?.[0]||'');
-      const pos=text.lastIndexOf('Assistant:');
-      if(pos>=0)text=text.slice(pos+10);
-      if(text.length>1800)text=text.slice(-1800);
+      const generated=await model.generate({...inputs,max_new_tokens:110,do_sample:false,repetition_penalty:1.1,return_dict_in_generate:true});
+      const seq=generated.sequences||generated;
+      // Decode *only* generated tokens: never accidentally parse labels from the question itself.
+      const promptLength=inputs.input_ids?.dims?.[1];
+      if(!seq?.data||!Number.isInteger(promptLength)||seq.data.length<=promptLength)throw Error('No usable response from vision model');
+      const tokenIds=Array.from(seq.data.slice(promptLength),Number);
+      let text=String(processor.tokenizer.decode(tokenIds,{skip_special_tokens:true})||'');
+      if(text.length>1800)text=text.slice(0,1800);
       results[entry.role]=text.trim();
     }
     self.postMessage({kind:'result',results});
