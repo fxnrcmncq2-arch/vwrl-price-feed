@@ -27,7 +27,7 @@
   <section class="page active" id="page-today">
     <div class="hero">
       <article class="card pad feature"><div class="hero-stat"><div><span class="eyebrow">TODAY'S CONSISTENCY</span><h2 id="hero-head">Small wins add up.</h2><p id="hero-detail">Check off the habits that move you forward.</p></div><div class="ring" id="ring"><div class="ring-inner"><strong id="score">0%</strong><span id="score-sub">0 of 7</span></div></div></div></article>
-      <article class="card pad day-plan"><div><span class="plan-label" id="plan-label">YOUR PLAN TODAY</span><h3 id="plan-name">Upper body A</h3><p id="plan-desc">Safe, controlled progress.</p></div><span class="chip" id="plan-chip">● Back-aware training</span></article>
+      <article class="card pad day-plan"><div><span class="plan-label" id="plan-label">YOUR PLAN TODAY</span><h3 id="plan-name">Upper body A</h3><p id="plan-desc">Safe, controlled progress.</p></div><div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px"><span class="chip" id="plan-chip">● Back-aware training</span><button type="button" data-tab="plan" class="textbtn">Choose gym days →</button></div></article>
     </div>
     <div class="weekbox"><div class="week-head"><div><span class="eyebrow">WEEK AT A GLANCE</span><div style="font-size:13px;margin-top:2px;color:var(--muted)" id="week-label">This week</div></div><div class="week-controls"><button class="small-btn" type="button" id="week-prev" aria-label="Previous week">‹</button><button class="small-btn" type="button" id="week-now" aria-label="Go to today">•</button><button class="small-btn" type="button" id="week-next" aria-label="Next week">›</button></div></div><div class="week-grid" id="week-days"></div></div>
     <div class="content-grid">
@@ -49,7 +49,7 @@
   </section>
   <section class="page" id="page-photos"><div class="section-title"><h2>Physique check-ins</h2><span class="pill">PRIVATE</span></div><div id="pc-photos" aria-live="polite"><div class="card pad"><p class="small muted">Loading your private photo gallery…</p></div></div></section>
   <section class="page" id="page-plan">
-    <div class="section-title"><h2>The programme</h2><span class="pill">BACK-FIRST</span></div><div class="card pad"><span class="eyebrow">THE FIRST 12 WEEKS</span><h2 style="font-size:24px;letter-spacing:-.04em;margin:9px 0">The physique is built by showing up.</h2><p class="small muted">Two supported upper-body sessions, one rehab-focused day and sensible recovery. Your current leg symptoms mean increasing spinal loading should follow clinical assessment, not a calendar.</p><div id="plan-list"></div></div>
+    <div id="forge-week-planner"></div><div class="section-title"><h2>Your scheduled programme</h2><span class="pill">BACK-FIRST</span></div><div class="card pad"><span class="eyebrow">THE FIRST 12 WEEKS</span><h2 style="font-size:24px;letter-spacing:-.04em;margin:9px 0">The physique is built by showing up.</h2><p class="small muted">Two supported upper-body sessions, one rehab-focused day and sensible recovery. Your current leg symptoms mean increasing spinal loading should follow clinical assessment, not a calendar.</p><div id="plan-list"></div></div>
     <div class="section-title"><h2>Progression, without rushing</h2></div><div class="card pad"><div class="detail"><span><strong>Weeks 1–2</strong><br><span class="tiny muted">Ease back in</span></span><span class="small muted" style="max-width:62%;text-align:right">2 sets, light–moderate effort, 3–4 reps in reserve</span></div><div class="detail"><span><strong>Weeks 3–6</strong><br><span class="tiny muted">Find your rhythm</span></span><span class="small muted" style="max-width:62%;text-align:right">Progress toward listed sets only if symptoms stay settled</span></div><div class="detail"><span><strong>Weeks 7–12</strong><br><span class="tiny muted">Build steadily</span></span><span class="small muted" style="max-width:62%;text-align:right">Add reps then small weight increases; don't increase through sciatica</span></div><p class="fineprint">An exercise causing more radiating pain, tingling or weakness should be stopped and reassessed. Your physiotherapist can change the programme.</p></div>
     <div class="section-title"><h2>When to seek help</h2></div><div class="safety"><strong>Because you've had L5/S1 surgery and still have leg symptoms:</strong> arrange a GP or MSK physiotherapy review. New or worsening leg weakness requires prompt medical assessment. New bladder/bowel control problems, saddle numbness, or severe worsening symptoms in both legs require emergency assessment (A&E/999). This tracker isn't medical monitoring.</div>
   </section>
@@ -58,7 +58,7 @@
     <div class="section-title"><h2>Your data</h2></div><div class="card pad"><p class="small muted" style="margin-top:0">Everything you tick or type is saved only in this browser on this device. There's no account, cloud sync or sharing of health information. Clearing website data or switching phones can erase your history.</p><div class="two-col"><button class="secondary-button" id="export-data" type="button">↓ Export backup</button><button class="secondary-button" id="import-data" type="button">↑ Import backup</button></div><input type="file" accept="application/json,.json" id="import-file" hidden><div style="margin-top:17px"><button class="textbtn" type="button" id="reset-data">Reset all my data</button></div></div>
     <div class="section-title"><h2>Make it an app</h2></div><div class="card pad"><p class="small" style="margin:0">On iPhone, open this URL in Safari, tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>. Your tracker will open like an app.</p></div>
   </section>
-  <footer class="footer">FORGE · DAILY PROGRESS, NOT PERFECTION · Version 1.3</footer>
+  <footer class="footer">FORGE · DAILY PROGRESS, NOT PERFECTION · Version 1.4</footer>
 </main>
 <nav class="tabs" aria-label="Main navigation"><button class="tab active" data-tab="today" type="button"><span class="symbol">◉</span>Today</button><button class="tab" data-tab="progress" type="button"><span class="symbol">▥</span>Progress</button><button class="tab" data-tab="photos" type="button"><span class="symbol">▧</span>Photos</button><button class="tab" data-tab="plan" type="button"><span class="symbol">▣</span>Plan</button><button class="tab" data-tab="settings" type="button"><span class="symbol">⚙</span>Settings</button></nav>
 <div class="toast" role="status" id="toast"></div>
@@ -74,8 +74,8 @@ function plusDays(iso,n){const d=dateFromISO(iso);d.setDate(d.getDate()+n);retur
 function monday(iso){const d=dateFromISO(iso);const offset=(d.getDay()+6)%7;d.setDate(d.getDate()-offset);return localISO(d)}
 function dayDistance(a,b){return Math.round((dateFromISO(a)-dateFromISO(b))/DAY_MS)}
 const today=()=>localISO(new Date());
-const initial={version:1,started:today(),settings:{protein:150,water:2,sleep:7,move:20},days:{},checkins:{},swaps:{}};
-function read(){try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY));if(!raw||typeof raw!=='object')return structuredClone(initial);return {version:1,swaps:raw.swaps&&typeof raw.swaps==='object'?raw.swaps:{},started:/^\d{4}-\d{2}-\d{2}$/.test(raw.started)?raw.started:today(),settings:{...initial.settings,...(raw.settings||{})},days:raw.days&&typeof raw.days==='object'?raw.days:{},checkins:raw.checkins&&typeof raw.checkins==='object'?raw.checkins:{}}}catch{return structuredClone(initial)}}
+const initial={version:1,started:today(),settings:{protein:150,water:2,sleep:7,move:20},days:{},checkins:{},swaps:{},weekPlans:{}};
+function read(){try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY));if(!raw||typeof raw!=='object')return structuredClone(initial);return {version:1,weekPlans:raw.weekPlans&&typeof raw.weekPlans==='object'&&!Array.isArray(raw.weekPlans)?raw.weekPlans:{},swaps:raw.swaps&&typeof raw.swaps==='object'?raw.swaps:{},started:/^\d{4}-\d{2}-\d{2}$/.test(raw.started)?raw.started:today(),settings:{...initial.settings,...(raw.settings||{})},days:raw.days&&typeof raw.days==='object'?raw.days:{},checkins:raw.checkins&&typeof raw.checkins==='object'?raw.checkins:{}}}catch{return structuredClone(initial)}}
 let state=read(),selected=today(),weekAnchor=monday(selected),page='today';
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch{toast('Storage unavailable — export your data')}}
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -88,7 +88,8 @@ const schedule=[
 {name:'Upper body B',desc:'Supported upper-body hypertrophy session.',type:'strength',exercises:[['Neutral-grip lat pulldown','3 × 10–12'],['Incline chest press machine','3 × 10–12'],['Reverse pec deck','2 × 12–15'],['Cable biceps curl','2 × 12–15'],['Rope triceps pushdown','2 × 12–15']]},
 {name:'Optional movement',desc:'Easy walking, cycling or rest — let symptoms decide.',type:'recovery',exercises:[]}
 ];
-function planFor(s){return schedule[dateFromISO(s).getDay()]}
+function templateFor(s){const week=state.weekPlans?.[monday(s)];if(week&&week.assignments&&Object.prototype.hasOwnProperty.call(week.assignments,s)){const idx=Number(week.assignments[s]);return Number.isInteger(idx)&&idx>=0&&idx<schedule.length?idx:0}return week?0:dateFromISO(s).getDay()}
+function planFor(s){const index=templateFor(s),base=schedule[index]||schedule[0],week=state.weekPlans?.[monday(s)];if(index===2&&week?.gymDays?.includes(s))return {...base,name:'Light gym / recovery',desc:'Easy, optional movement only. No extra hard sets while sciatica persists.'};return base}
 function dayData(s=selected){if(!state.days[s]||typeof state.days[s]!=='object')state.days[s]={};const d=state.days[s];if(!d.tasks||typeof d.tasks!=='object')d.tasks={};if(!d.exercises||typeof d.exercises!=='object')d.exercises={};return d}
 function tasksFor(s){const settings=state.settings,flare=state.days[s]?.symptom==='flare';const plan=planFor(s);return [
 {id:'protein',name:'Protein target',sub:`Reach around ${settings.protein}g across your meals`,tag:`${settings.protein}g`},
@@ -120,11 +121,12 @@ $('export-data').addEventListener('click',()=>{const file=new Blob([JSON.stringi
 $('import-data').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;if(file.size>1500000){toast('Backup is too large');return}try{const next=JSON.parse(await file.text());if(next.version!==1||!next.days||!next.settings||!next.checkins||!confirm('Import backup? This replaces the history stored on this device.'))return;const cleaned={...next};delete cleaned.exportedAt;localStorage.setItem(STORAGE_KEY,JSON.stringify(cleaned));state=read();selected=today();weekAnchor=monday(selected);renderToday();renderSettings();toast('Backup imported')}catch{toast('Unable to read this backup')}});
 $('reset-data').addEventListener('click',()=>{if(confirm('Delete all FORGE checklists and check-ins saved on this device? This cannot be undone unless you have a backup.')){state=structuredClone(initial);state.started=today();persist();selected=today();weekAnchor=monday(selected);renderToday();renderSettings();toast('Data reset')}});
 if('serviceWorker' in navigator&&location.protocol==='https:'){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
-window.FORGE={state:()=>state,selected:()=>selected,dayData,planFor,schedule,persist,renderToday,renderPlan,escapeHTML,toast};
+window.FORGE={state:()=>state,selected:()=>selected,dayData,planFor,templateFor,schedule,persist,renderToday,renderPlan,escapeHTML,toast,goToDate:(date)=>{selected=date;weekAnchor=monday(date);renderToday();showTab('today')}};
 renderToday();renderPlan();
 })();
 </script>
-<script src="./enhance.js?v=1.1" defer></script>
+<script src="./enhance.js?v=1.4" defer></script>
+<script src="./weekly-planner.js?v=1.4" defer></script>
 <script src="./photo-coach.js?v=1.3" defer></script>
 <script src="./local-ai.js?v=1.3.0" defer></script>
 </body>
