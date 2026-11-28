@@ -2,9 +2,9 @@
   "ticker": "VWRL",
   "currency": "GBP",
   "price": 133.54,
-  "checkedAt": "2026-11-28T09:00:17.152Z",
-  "scheduledAt": "2026-11-28T09:00:16.000Z",
-  "reportHourUK": 9,
+  "checkedAt": "2026-11-28T12:00:17.529Z",
+  "scheduledAt": "2026-11-28T12:00:16.000Z",
+  "reportHourUK": 12,
   "date": "2026-11-28",
   "source": "Trading 212",
   "status": "success"
